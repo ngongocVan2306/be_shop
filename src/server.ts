@@ -18,6 +18,6 @@ connectDB();
 //init API routes
 initApiRoutes(app);
 
-app.listen(8081, () => {
-    console.log('App starting successfully with port 8081');
+app.listen(8080, () => {
+    console.log('App starting successfully with port 8080');
 });

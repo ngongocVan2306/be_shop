@@ -19,24 +19,8 @@ User.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        role: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
         address: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        address_detail: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        phoneNumber: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        code: {
-            type: DataTypes.STRING,
             allowNull: true,
         },
         email: {
@@ -49,10 +33,6 @@ User.init(
         },
         avatar: {
             type: DataTypes.STRING,
-            allowNull: true,
-        },
-        is_login_social: {
-            type: DataTypes.BOOLEAN,
             allowNull: true,
         },
         age: {
@@ -70,14 +50,4 @@ User.init(
     },
 );
 
-// User.belongsTo(AllCode, {
-//     foreignKey: 'role',
-//     targetKey: 'id',
-//     as: 'roleData',
-// });
-// AllCode.hasMany(AllCode, {
-//     foreignKey: 'address',
-//     targetKey: 'id',
-//     as: 'addressData',
-// });
 export default User;
