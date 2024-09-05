@@ -1,10 +1,34 @@
 import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import { CreateUserDto } from '~/dto/userDto/createUser.dto';
+import { LoginUserDto } from '~/dto/userDto/loginUser.dto';
 import userService from '~/service/userService';
+import { ResponseHandler } from '~/utils/Response';
+import { validateData } from '~/utils/validate';
 
 class UserController {
-    async handleGet(req: Request, res: Response) {
-        const data = await userService.testService();
-        return res.status(200).json(data);
+    async handleRegister(req: Request, res: Response) {
+        try {
+            const isValid = await validateData(CreateUserDto, req.body, res);
+            if (!isValid) return;
+            const data = await userService.register(req.body);
+            return res.status(httpStatus.OK).json(data);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
+    }
+
+    async handleLogin(req: Request, res: Response) {
+        try {
+            const isValid = await validateData(LoginUserDto, req.body, res);
+            if (!isValid) return;
+            const data = await userService.login(req.body);
+            return res.status(httpStatus.OK).json(data);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
     }
 }
 

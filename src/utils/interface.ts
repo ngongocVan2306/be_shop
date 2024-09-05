@@ -9,20 +9,25 @@ export interface IPayloadJWT {
 
 export interface IUser {
     id: number;
-    role: number;
-    address: number;
-    address_detail: string;
-    phoneNumber: string;
-    code: string;
+    firstName: string;
+    lastName: string;
+    address: string;
     email: string;
     password: string;
     avatar: string;
-    is_login_social: boolean;
-    age: string;
+    age: number;
     gender: boolean;
-    roleData?: {
-        type: string;
-        title: string;
-        code: string;
-    };
+}
+
+export interface IProduct {
+    id: number;
+    name: string;
+    total: number;
+    inventory: number;
+}
+
+export interface IImage {
+    id: number;
+    img_url: string;
+    product_id: string;
 }
