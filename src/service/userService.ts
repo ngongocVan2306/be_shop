@@ -2,8 +2,10 @@ import httpStatus from 'http-status';
 import { CreateUserDto } from '~/dto/userDto/createUser.dto';
 import { LoginUserDto } from '~/dto/userDto/loginUser.dto';
 import { comparePassword, endCodePassword } from '~/helpers/bcrypt';
+import { handleCreateToken } from '~/middleware/jwtActions';
 import User from '~/models/User';
-import { IUser } from '~/utils/interface';
+import { role } from '~/utils/enum';
+import { IDataResLogin, IUser } from '~/utils/interface';
 import { ResponseHandler } from '~/utils/Response';
 
 class UserService {
@@ -50,6 +52,7 @@ class UserService {
             await User.create({
                 ...data,
                 password: passwordHash,
+                role: 'user',
             });
 
             return ResponseHandler(httpStatus.OK, null, 'User create successfully');
@@ -77,15 +80,44 @@ class UserService {
                 return ResponseHandler(httpStatus.BAD_REQUEST, null, 'Wrong password');
             }
 
-            const dataBuider: Partial<IUser> = {
-                id: dataCheck.User.id,
-                email: dataCheck.User.email,
-                firstName: dataCheck.User.firstName,
-                lastName: dataCheck.User.lastName,
-                avatar: dataCheck.User.avatar,
+            const tokenAccess = handleCreateToken(
+                {
+                    id: dataCheck.User.id,
+                    email: dataCheck.User.email,
+                    role: dataCheck.User.role,
+                },
+                '30day',
+            );
+
+            const tokenRefresh = handleCreateToken(
+                {
+                    id: dataCheck.User.id,
+                    email: dataCheck.User.email,
+                    role: dataCheck.User.role,
+                },
+                '360day',
+            );
+
+            const user = {
+                ...dataCheck.User,
+            } as any;
+            delete user.password;
+
+            const dataBuider: IDataResLogin = {
+                user: user,
+                tokens: {
+                    access_token: tokenAccess ? tokenAccess : '',
+                    refresh_token: tokenRefresh ? tokenRefresh : '',
+                },
             };
 
-            return ResponseHandler(httpStatus.OK, dataBuider, 'Login successfully');
+            return ResponseHandler<IDataResLogin>(
+                httpStatus.OK,
+                {
+                    ...dataBuider,
+                },
+                'Login successfully',
+            );
         } catch (err) {
             console.log(err);
             Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));

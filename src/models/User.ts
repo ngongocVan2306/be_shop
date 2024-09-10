@@ -1,5 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../configs/connectDB';
+import AllCode from './AllCode';
+import { role } from '~/utils/enum';
 
 class User extends Model {}
 
@@ -13,11 +15,11 @@ User.init(
         },
         firstName: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         address: {
             type: DataTypes.INTEGER,
@@ -25,11 +27,11 @@ User.init(
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         avatar: {
             type: DataTypes.STRING,
@@ -43,11 +45,21 @@ User.init(
             type: DataTypes.BOOLEAN,
             allowNull: true,
         },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
     {
         sequelize,
         modelName: 'User',
     },
 );
+
+// User.belongsTo(AllCode, {
+//     foreignKey: 'role',
+//     targetKey: 'id',
+//     as: 'AllCodeData',
+// });
 
 export default User;

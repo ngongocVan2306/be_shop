@@ -1,17 +1,14 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateProductDto {
+export class ProductAddCartDto {
     constructor() {}
 
     @IsNotEmpty()
-    name: string;
+    user_id: number;
 
     @IsNotEmpty()
-    price: number;
+    product_id: number;
 
     @IsNotEmpty()
-    total: number;
-
-    @IsNotEmpty()
-    type: number;
+    count: number;
 }
