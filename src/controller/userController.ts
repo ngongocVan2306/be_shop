@@ -12,6 +12,7 @@ class UserController {
             const isValid = await validateData(CreateUserDto, req.body, res);
             if (!isValid) return;
             const data = await userService.register(req.body);
+
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);
@@ -24,7 +25,33 @@ class UserController {
             const isValid = await validateData(LoginUserDto, req.body, res);
             if (!isValid) return;
             const data = await userService.login(req.body);
+            if (data?.code === httpStatus.OK) {
+                console.log(data);
+                res.cookie('access_token', data.data?.tokens.access_token, {
+                    maxAge: 30 * 24 * 60 * 60 * 1000,
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                });
+                res.cookie('refresh_token', data.data?.tokens.refresh_token, {
+                    maxAge: 365 * 24 * 60 * 60 * 1000,
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                });
+            }
             return res.status(httpStatus.OK).json(data);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
+    }
+
+    async handleLogout(req: Request, res: Response) {
+        try {
+            res.clearCookie('access_token');
+            res.clearCookie('refresh_token');
+            return res.status(httpStatus.OK).json(ResponseHandler(httpStatus.OK, null, 'Logout success'));
         } catch (err) {
             console.log(err);
             return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));

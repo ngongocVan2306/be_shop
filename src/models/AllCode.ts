@@ -1,10 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../configs/connectDB';
-import Product from './Product';
 
-class Image extends Model {}
+class AllCode extends Model {}
 
-Image.init(
+AllCode.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -12,29 +11,19 @@ Image.init(
             allowNull: false,
             autoIncrement: true,
         },
-        img_url: {
+        description: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        product_id: {
-            type: DataTypes.INTEGER,
+        type: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
     },
     {
         sequelize,
-        modelName: 'Image',
+        modelName: 'AllCode',
     },
 );
 
-Image.belongsTo(Product, {
-    foreignKey: 'product_id',
-    targetKey: 'id',
-    as: 'productData',
-});
-
-Product.hasMany(Image, {
-    foreignKey: 'product_id',
-    as: 'imageData',
-});
-export default Image;
+export default AllCode;

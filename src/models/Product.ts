@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../configs/connectDB';
+import Cate from './Cate';
 
 class Product extends Model {}
 
@@ -13,15 +14,23 @@ Product.init(
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         total: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+        },
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        type: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         inventory: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
         },
     },
     {
@@ -29,5 +38,11 @@ Product.init(
         modelName: 'Product',
     },
 );
+
+Product.belongsTo(Cate, {
+    foreignKey: 'type',
+    targetKey: 'id',
+    as: 'CateData',
+});
 
 export default Product;

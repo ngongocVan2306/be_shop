@@ -15,11 +15,15 @@ Product_User.init(
         },
         user_id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
         },
         product_id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+        },
+        count: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
     },
     {
