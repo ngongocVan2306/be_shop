@@ -91,6 +91,8 @@ class ProductController {
             const pageSize: number = parseInt(req.query.pageSize as string);
             const userId: number = parseInt(req.query.userId as string);
 
+            console.log(page, pageSize, userId);
+
             const data = await productService.getCartService(userId, page, pageSize);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {

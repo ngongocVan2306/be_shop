@@ -64,6 +64,7 @@ class ProductService {
                 ],
                 offset: offset,
                 limit: pageSize,
+                distinct: true,
             });
 
             let data = {
@@ -238,6 +239,7 @@ class ProductService {
                 ],
                 offset: offset,
                 limit: pageSize,
+                distinct: true,
             });
 
             let data = {

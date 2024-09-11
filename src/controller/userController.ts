@@ -26,7 +26,6 @@ class UserController {
             if (!isValid) return;
             const data = await userService.login(req.body);
             if (data?.code === httpStatus.OK) {
-                console.log(data);
                 res.cookie('access_token', data.data?.tokens.access_token, {
                     maxAge: 30 * 24 * 60 * 60 * 1000,
                     httpOnly: true,
