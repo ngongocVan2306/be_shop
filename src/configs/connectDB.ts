@@ -23,7 +23,6 @@
 
 import { Sequelize } from 'sequelize';
 
-// npm i mysql2
 export const sequelize = new Sequelize('bkhyolwqd76qiibljtzz', 'utqeiigwqkav7zwd', 'm2EbljFmmh4PjxHtD0Zq', {
     dialect: 'mysql',
     host: 'bkhyolwqd76qiibljtzz-mysql.services.clever-cloud.com',
