@@ -1,4 +1,3 @@
-import { classToClassFromExist } from 'class-transformer';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { CreateProductDto } from '~/dto/productDto/createProduct.dto';
@@ -12,6 +11,7 @@ class ProductController {
         try {
             // const isValid = await validateData(CreateProductDto, req.body, res);
             // if (!isValid) return;
+            console.log(req.body);
 
             const files = req?.files as Express.Multer.File[];
 

@@ -28,5 +28,5 @@ app.use('/v1/images', express.static(__dirname + '/public/products'));
 initApiRoutes(app);
 
 app.listen(8080, () => {
-    console.log('App starting successfully with port 8080');
+    console.log('App starting successfully with port 3306');
 });

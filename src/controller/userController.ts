@@ -11,6 +11,7 @@ class UserController {
         try {
             const isValid = await validateData(CreateUserDto, req.body, res);
             if (!isValid) return;
+
             const data = await userService.register(req.body);
 
             return res.status(httpStatus.OK).json(data);
