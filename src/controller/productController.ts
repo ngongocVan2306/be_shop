@@ -11,7 +11,6 @@ class ProductController {
         try {
             // const isValid = await validateData(CreateProductDto, req.body, res);
             // if (!isValid) return;
-            console.log(req.body);
 
             const files = req?.files as Express.Multer.File[];
 
