@@ -6,7 +6,12 @@ dotenv.config();
 
 export default function configCors(app: Express) {
     const corsOption = {
-        origin: ['http://localhost:3000', 'http://localhost:5173', 'https://fe-shop-seven.vercel.app'],
+        origin: [
+            'http://localhost:3000',
+            'http://localhost:5173',
+            'https://fe-shop-seven.vercel.app',
+            'https://fe-vert.vercel.app',
+        ],
         credentials: true,
     };
 
