@@ -129,7 +129,6 @@ class ProductService {
                     where: { product_id: id },
                 }),
             ]);
-            console.log('res>>>>', res);
 
             await Product.destroy({
                 where: {
