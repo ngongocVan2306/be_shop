@@ -82,8 +82,14 @@ class ProductService {
         }
     }
 
-    async searchProductService(textSearch: string) {
+    async searchProductService(textSearch: string, page: number, pageSize: number) {
         try {
+            let offset = 0;
+
+            if (page && pageSize) {
+                offset = (page - 1) * pageSize;
+            }
+
             const { count, rows } = await Product.findAndCountAll({
                 where: {
                     [Op.or]: [{ name: { [Op.like]: `%${textSearch}%` } }],
@@ -100,11 +106,21 @@ class ProductService {
                         },
                     },
                 ],
-                offset: 0,
-                limit: 10,
+                offset: offset,
+                limit: pageSize ? pageSize : 10,
+                distinct: true,
             });
 
-            return ResponseHandler(httpStatus.OK, rows, 'Products');
+            let data = {
+                items: rows,
+                meta: {
+                    currentPage: page ? page : 1,
+                    totalIteams: count,
+                    totalPages: Math.ceil(count / (pageSize ? pageSize : 10)),
+                },
+            };
+
+            return ResponseHandler(httpStatus.OK, data, 'Products');
         } catch (err) {
             console.log(err);
             Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));

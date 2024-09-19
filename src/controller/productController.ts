@@ -53,7 +53,9 @@ class ProductController {
     async handleSearchProduct(req: Request, res: Response) {
         try {
             const textSearch: string = req.query.textSearch as string;
-            const data = await productService.searchProductService(textSearch);
+            const page: number = parseInt(req.query.page as string);
+            const pageSize: number = parseInt(req.query.pageSize as string);
+            const data = await productService.searchProductService(textSearch, page, pageSize);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);
