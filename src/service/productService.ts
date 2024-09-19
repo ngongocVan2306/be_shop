@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import { Op, where } from 'sequelize';
 import { CreateProductDto } from '~/dto/productDto/createProduct.dto';
+import { dataChangeCartDto } from '~/dto/productDto/dataChangeCart.dto';
 import { ProductAddCartDto } from '~/dto/productDto/productAddCart.dto';
 import Image from '~/models/Image';
 import Product from '~/models/Product';
@@ -188,30 +189,11 @@ class ProductService {
 
     async addProductToCartSErvice(data: ProductAddCartDto) {
         try {
-            // const product = (await Product.findOne({
-            //     where: {
-            //         id: data.product_id,
-            //     },
-            // })) as IProduct | null;
-
-            // if (!product) {
-            //     return Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
-            // }
-
             console.log(data);
 
             await Product_User.create({
                 ...data,
             });
-
-            // await Product.update(
-            //     { inventory: product.inventory - data.count },
-            //     {
-            //         where: {
-            //             id: data.product_id,
-            //         },
-            //     },
-            // );
 
             return ResponseHandler(httpStatus.OK, null, 'Đã thêm sản phẩm vào giỏ hàng');
         } catch (err) {
@@ -297,6 +279,28 @@ class ProductService {
                 where: { user_id: id },
             });
             return ResponseHandler(httpStatus.OK, count.length, 'Product deleted successfully');
+        } catch (err) {
+            console.log(err);
+            Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+        }
+    }
+
+    async changeCartService(data: dataChangeCartDto) {
+        try {
+            if (!data.id || !data.count) {
+                return Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+            }
+
+            await Product_User.update(
+                {
+                    count: data.count,
+                },
+                {
+                    where: { id: data.id },
+                },
+            );
+
+            return ResponseHandler(httpStatus.OK, null, 'Thay đổi số lượng sản phẩm thành công ');
         } catch (err) {
             console.log(err);
             Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));

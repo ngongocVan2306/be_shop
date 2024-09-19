@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { CreateProductDto } from '~/dto/productDto/createProduct.dto';
+import { dataChangeCartDto } from '~/dto/productDto/dataChangeCart.dto';
 import { ProductAddCartDto } from '~/dto/productDto/productAddCart.dto';
 import productService from '~/service/productService';
 import { ResponseHandler } from '~/utils/Response';
@@ -92,8 +93,6 @@ class ProductController {
             const pageSize: number = parseInt(req.query.pageSize as string);
             const userId: number = parseInt(req.query.userId as string);
 
-            console.log(page, pageSize, userId);
-
             const data = await productService.getCartService(userId, page, pageSize);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
@@ -117,6 +116,19 @@ class ProductController {
         try {
             const id: number = +req.params.id;
             const data = await productService.countCartService(id);
+            return res.status(httpStatus.OK).json(data);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
+    }
+
+    async handleChangeCount(req: Request, res: Response) {
+        try {
+            const isValid = await validateData(dataChangeCartDto, req.body, res);
+            if (!isValid) return;
+
+            const data = await productService.changeCartService(req.body);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);

@@ -14,6 +14,7 @@ const initApiProduct = (app: Express) => {
     router.get('/cart', productController.handleGetCart);
     router.delete('/cart/:id', productController.handleDeleteCart);
     router.get('/count/:id', productController.handleCountCart);
+    router.put('/change-cart', productController.handleChangeCount);
     return app.use('/v1/product', router);
 };
 
