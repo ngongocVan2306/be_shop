@@ -1,8 +1,9 @@
+import { Request } from 'express';
 import httpStatus from 'http-status';
 import { CreateUserDto } from '~/dto/userDto/createUser.dto';
 import { LoginUserDto } from '~/dto/userDto/loginUser.dto';
 import { comparePassword, endCodePassword } from '~/helpers/bcrypt';
-import { handleCreateToken } from '~/middleware/jwtActions';
+import { handleCreateToken, handleVerifyToken } from '~/middleware/jwtActions';
 import User from '~/models/User';
 import { role } from '~/utils/enum';
 import { IDataResLogin, IUser } from '~/utils/interface';
@@ -86,7 +87,7 @@ class UserService {
                     email: dataCheck.User.email,
                     role: dataCheck.User.role,
                 },
-                '30day',
+                '10s',
             );
 
             const tokenRefresh = handleCreateToken(
@@ -124,7 +125,45 @@ class UserService {
         }
     }
 
-    async Logout() {}
+    async Logout() {
+        try {
+            return ResponseHandler(httpStatus.OK, null, 'Logout successfully');
+        } catch (err) {
+            console.log(err);
+            Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+        }
+    }
+
+    async refreshTokenService(req: Request) {
+        try {
+            if (!req.headers.authorization)
+                return Promise.reject(ResponseHandler(httpStatus.UNAUTHORIZED, null, 'token not found!'));
+
+            const token = req.headers.authorization?.replace('Bearer', '').trim();
+
+            let decode = handleVerifyToken(token);
+
+            if (!decode) return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'token can not decoded!'));
+
+            if (decode.role !== role.USER) {
+                return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'your role aren not user!'));
+            }
+
+            const access_token = handleCreateToken(
+                {
+                    id: decode.id,
+                    email: decode.email,
+                    role: decode.role,
+                },
+                '10s',
+            );
+
+            return ResponseHandler(httpStatus.OK, access_token, 'create token new successfully');
+        } catch (err) {
+            console.log(err);
+            Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+        }
+    }
 }
 
 export default new UserService();

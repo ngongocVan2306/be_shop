@@ -91,9 +91,8 @@ class ProductController {
         try {
             const page: number = parseInt(req.query.page as string);
             const pageSize: number = parseInt(req.query.pageSize as string);
-            const userId: number = parseInt(req.query.userId as string);
 
-            const data = await productService.getCartService(userId, page, pageSize);
+            const data = await productService.getCartService(req.body.user_id, page, pageSize);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);
@@ -104,6 +103,7 @@ class ProductController {
     async handleDeleteCart(req: Request, res: Response) {
         try {
             const id: number = +req.params.id;
+
             const data = await productService.deleteCartService(id);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
@@ -114,8 +114,7 @@ class ProductController {
 
     async handleCountCart(req: Request, res: Response) {
         try {
-            const id: number = +req.params.id;
-            const data = await productService.countCartService(id);
+            const data = await productService.countCartService(req.body.user_id);
             return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);

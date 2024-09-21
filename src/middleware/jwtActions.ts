@@ -31,7 +31,7 @@ export const handleVerifyToken = (token: string): IPayloadJWT | null => {
     }
 };
 
-export const handleCheckTokenAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const handleCheckTokenUser = (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.headers.authorization)
             return res
@@ -47,9 +47,8 @@ export const handleCheckTokenAdmin = (req: Request, res: Response, next: NextFun
                 .status(httpStatus.FORBIDDEN)
                 .json(ResponseHandler(httpStatus.FORBIDDEN, null, "token can't decoded"));
 
-        req.body.token_author = decode.email;
-
-        if (decode.role === role.ADMIN) {
+        if (decode.role === role.USER) {
+            req.body.user_id = decode.id;
             next();
         } else {
             return res.status(403).json(ResponseHandler(httpStatus.FORBIDDEN, null, "your role aren't user"));

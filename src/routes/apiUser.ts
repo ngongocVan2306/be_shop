@@ -7,6 +7,7 @@ const initApiUser = (app: Express) => {
     router.post('/register', userController.handleRegister);
     router.post('/login', userController.handleLogin);
     router.post('/logout', userController.handleLogout);
+    router.get('/refresh', userController.handleRefreshToken);
 
     return app.use('/v1/user', router);
 };

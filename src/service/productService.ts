@@ -189,8 +189,6 @@ class ProductService {
 
     async addProductToCartSErvice(data: ProductAddCartDto) {
         try {
-            console.log(data);
-
             await Product_User.create({
                 ...data,
             });
@@ -263,7 +261,7 @@ class ProductService {
             await Product_User.destroy({
                 where: { id: id },
             });
-            return ResponseHandler(httpStatus.OK, null, 'Product deleted successfully');
+            return ResponseHandler(httpStatus.OK, null, 'Cart deleted successfully');
         } catch (err) {
             console.log(err);
             Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));

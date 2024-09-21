@@ -28,16 +28,12 @@ class UserController {
             const data = await userService.login(req.body);
             if (data?.code === httpStatus.OK) {
                 res.cookie('access_token', data.data?.tokens.access_token, {
-                    maxAge: 30 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'none',
+                    maxAge: 10 * 1000,
+                    // httpOnly: true,
                 });
                 res.cookie('refresh_token', data.data?.tokens.refresh_token, {
                     maxAge: 365 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'none',
+                    // httpOnly: true,
                 });
             }
             return res.status(httpStatus.OK).json(data);
@@ -51,7 +47,18 @@ class UserController {
         try {
             res.clearCookie('access_token');
             res.clearCookie('refresh_token');
-            return res.status(httpStatus.OK).json(ResponseHandler(httpStatus.OK, null, 'Logout success'));
+            const data = await userService.Logout();
+            return res.status(httpStatus.OK).json(ResponseHandler(httpStatus.OK, data, 'Logout success'));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
+    }
+
+    async handleRefreshToken(req: Request, res: Response) {
+        try {
+            const data = await userService.refreshTokenService(req);
+            return res.status(httpStatus.OK).json(data);
         } catch (err) {
             console.log(err);
             return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
