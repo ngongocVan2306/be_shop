@@ -164,6 +164,26 @@ class UserService {
             Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
         }
     }
+
+    async CreateAdminService(id: number) {
+        try {
+            if (!id) {
+                return Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+            }
+            await User.update(
+                {
+                    role: 'admin',
+                },
+                {
+                    where: { id: id },
+                },
+            );
+            return ResponseHandler(httpStatus.OK, null, 'create admin account successfully');
+        } catch (err) {
+            console.log(err);
+            Promise.reject(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'có lỗi xảy ra!'));
+        }
+    }
 }
 
 export default new UserService();

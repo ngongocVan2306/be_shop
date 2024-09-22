@@ -64,6 +64,17 @@ class UserController {
             return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
         }
     }
+
+    async handleCreateAdmin(req: Request, res: Response) {
+        try {
+            const id: number = +req.params.id;
+            const data = await userService.CreateAdminService(id);
+            return res.status(httpStatus.OK).json(data);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(ResponseHandler(httpStatus.BAD_GATEWAY, null, 'Error From Server'));
+        }
+    }
 }
 
 const userController = new UserController();
