@@ -145,8 +145,8 @@ class UserService {
 
             if (!decode) return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'token can not decoded!'));
 
-            if (decode.role !== role.USER) {
-                return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'your role aren not user!'));
+            if (decode.role !== role.ADMIN) {
+                return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'your role aren not admin!'));
             }
 
             const access_token = handleCreateToken(
