@@ -3,11 +3,13 @@ import httpStatus from 'http-status';
 import { CreateUserDto } from '~/dto/userDto/createUser.dto';
 import { LoginUserDto } from '~/dto/userDto/loginUser.dto';
 import { comparePassword, endCodePassword } from '~/helpers/bcrypt';
-import { handleCreateToken, handleVerifyToken } from '~/middleware/jwtActions';
+import { handleCreateToken, handleVerifyRefreshToken, handleVerifyToken } from '~/middleware/jwtActions';
 import User from '~/models/User';
 import { role } from '~/utils/enum';
 import { IDataResLogin, IUser } from '~/utils/interface';
 import { ResponseHandler } from '~/utils/Response';
+import dotenv from 'dotenv';
+dotenv.config();
 
 class UserService {
     async checkUserExit(
@@ -88,6 +90,7 @@ class UserService {
                     role: dataCheck.User.role,
                 },
                 '10s',
+                process.env.JWT_SECRET as string,
             );
 
             const tokenRefresh = handleCreateToken(
@@ -97,6 +100,7 @@ class UserService {
                     role: dataCheck.User.role,
                 },
                 '360day',
+                process.env.JWT_SECRET_REFRESH as string,
             );
 
             const user = {
@@ -141,7 +145,7 @@ class UserService {
 
             const token = req.headers.authorization?.replace('Bearer', '').trim();
 
-            let decode = handleVerifyToken(token);
+            let decode = handleVerifyRefreshToken(token);
 
             if (!decode) return Promise.reject(ResponseHandler(httpStatus.FORBIDDEN, null, 'token can not decoded!'));
 
@@ -156,6 +160,7 @@ class UserService {
                     role: decode.role,
                 },
                 '10s',
+                process.env.JWT_SECRET as string,
             );
 
             return ResponseHandler(httpStatus.OK, access_token, 'create token new successfully');
